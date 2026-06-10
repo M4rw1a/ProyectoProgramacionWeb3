@@ -48,7 +48,7 @@ class Aula(models.Model):
     )
 
     piso = models.CharField(
-        max_length=10
+        max_length=30
     )
 
     def __str__(self):
