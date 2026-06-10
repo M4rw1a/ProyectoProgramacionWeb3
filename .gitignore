@@ -1,9 +1,22 @@
+# Entorno virtual
+env/
 venv/
+
+# Python
 __pycache__/
 *.pyc
+
+# Base de datos SQLite
 db.sqlite3
 
+# VS Code
+.vscode/
+
+# Variables de entorno
 .env
 
-.idea/
-.vscode/
+# Archivos temporales
+*.log
+
+# Migraciones compiladas
+*.pyo
