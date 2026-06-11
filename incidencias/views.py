@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from rest_framework import viewsets
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from .models import Incidencia, Aula, Seguimiento, Perfil
 from .serializers import (
     IncidenciaSerializer,
@@ -12,6 +13,7 @@ from .serializers import (
 class IncidenciaViewSet(viewsets.ModelViewSet):
     queryset = Incidencia.objects.all()
     serializer_class = IncidenciaSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
 
 class AulaViewSet(viewsets.ModelViewSet):
