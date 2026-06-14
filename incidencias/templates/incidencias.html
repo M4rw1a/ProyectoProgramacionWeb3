@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Smart Aulas - Listado</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/">Smart Aulas</a>
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="/">Inicio</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="/incidencias/">Ver Incidencias</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/registrar/">Reportar Incidencia</a></li>
+                    <li class="nav-item">
+                         <a class="nav-link text-warning fw-bold" href="/admin/" target="_blank">Panel Admin</a>
+                    </li>
+                    <li class="nav-item">
+                         <a class="nav-link text-danger fw-bold" href="#" onclick="cerrarSesion()">Cerrar Sesión</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <h3 class="mb-4 fw-bold">Monitor de Incidencias</h3>
+        
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-body row g-3">
+                <div class="col-md-4">
+                    <label class="form-label small fw-bold text-muted">Filtrar por Tipo</label>
+                    <select class="form-select" id="filtro-tipo">
+                        <option value="">Todos los tipos</option>
+                        <option value="PROYECTOR">Proyector</option>
+                        <option value="COMPUTADORA">Computadora</option>
+                        <option value="CONECTIVIDAD">Conectividad</option>
+                    </select>
+                </div>
+                <div class="col-md-8 d-flex align-items-end justify-content-md-end gap-2">
+                    <button class="btn btn-outline-secondary" onclick="cargarRuta('/api/incidencias/')">Mostrar Todas</button>
+                    <button class="btn btn-danger" onclick="cargarRuta('/api/consultas/pendientes/')">Ver Pendientes</button>
+                    <button class="btn btn-success" onclick="cargarRuta('/api/consultas/resueltas/')">Ver Resueltas</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="table-responsive bg-white rounded shadow-sm">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>Aula ID</th>
+                        <th>Tipo Problema</th>
+                        <th>Descripción</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+                <tbody id="tabla-cuerpo">
+                    <tr><td colspan="5" class="text-center text-muted py-4">Cargando registros...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // Escuchar el selector de tipo
+        document.getElementById('filtro-tipo').addEventListener('change', (e) => {
+            if(e.target.value) cargarRuta(`/api/consultas/tipo/${e.target.value}/`);
+        });
+
+        // Función para cargar datos desde la API
+        async function cargarRuta(url) {
+            try {
+                const res = await fetch(url);
+                const data = await res.json();
+                const tbody = document.getElementById('tabla-cuerpo');
+                tbody.innerHTML = '';
+
+                if(data.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="5" class="text-center text-muted py-4">No hay datos.</td></tr>`;
+                    return;
+                }
+
+                data.forEach(inc => {
+                    let badgeColor = inc.estado === 'PENDIENTE' ? 'bg-danger' : (inc.estado === 'EN_PROCESO' ? 'bg-warning text-dark' : 'bg-success');
+                    tbody.innerHTML += `
+                        <tr>
+                            <td>#${inc.id}</td>
+                            <td class="fw-bold">Aula ${inc.aula}</td>
+                            <td><span class="badge bg-secondary">${inc.tipo_problema}</span></td>
+                            <td>${inc.descripcion}</td>
+                            <td><span class="badge ${badgeColor}">${inc.estado}</span></td>
+                        </tr>
+                    `;
+                });
+            } catch (err) { console.error(err); }
+        }
+
+        // Cargar todo al inicio
+        document.addEventListener('DOMContentLoaded', () => cargarRuta('/api/incidencias/'));
+    </script>
+    <script>
+    function cerrarSesion() {
+        localStorage.removeItem('access_token');
+        window.location.href = '/login/';
+    }
+</script>
+</body>
+</html>

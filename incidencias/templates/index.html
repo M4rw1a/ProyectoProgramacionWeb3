@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Smart Aulas - Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/">Smart Aulas</a>
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link active" href="/">Inicio</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/incidencias/">Ver Incidencias</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/registrar/">Reportar Incidencia</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/seguimientos/">Seguimientos</a></li>
+                    <li class="nav-item">
+                         <a class="nav-link text-warning fw-bold" href="/admin/" target="_blank">Panel Admin</a>
+                    </li>
+                    <li class="nav-item">
+                         <a class="nav-link text-danger fw-bold" href="#" onclick="cerrarSesion()">Cerrar Sesión</a>
+                    </li>            
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <h2 class="mb-4 fw-bold text-center">Resumen Operativo de Aulas</h2>
+        <div class="row text-center mt-4">
+            <div class="col-md-3">
+                <div class="card border-0 shadow-sm bg-primary text-white h-100">
+                    <div class="card-body py-5">
+                        <h5>Total Reportes</h5>
+                        <h1 class="display-3 fw-bold" id="stat-total">-</h1>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card border-0 shadow-sm bg-danger text-white h-100">
+                    <div class="card-body py-5">
+                        <h5>Pendientes</h5>
+                        <h1 class="display-3 fw-bold" id="stat-pendientes">-</h1>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card border-0 shadow-sm bg-warning text-dark h-100">
+                    <div class="card-body py-5">
+                        <h5>En Proceso</h5>
+                        <h1 class="display-3 fw-bold" id="stat-proceso">-</h1>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card border-0 shadow-sm bg-success text-white h-100">
+                    <div class="card-body py-5">
+                        <h5>Resueltas</h5>
+                        <h1 class="display-3 fw-bold" id="stat-resueltas">-</h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                const res = await fetch('/api/consultas/estadisticas/');
+                const data = await res.json();
+                document.getElementById('stat-total').innerText = data.total;
+                document.getElementById('stat-pendientes').innerText = data.pendientes;
+                document.getElementById('stat-proceso').innerText = data.en_proceso;
+                document.getElementById('stat-resueltas').innerText = data.resueltas;
+            } catch (error) { console.error("Error al cargar stats:", error); }
+        });
+    </script>
+    <script>
+    function cerrarSesion() {
+        localStorage.removeItem('access_token');
+        window.location.href = '/login/';
+    }
+</script>
+</body>
+</html>

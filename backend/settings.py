@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -81,7 +82,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'reporte_aulas',
         'USER': 'root',
-        'PASSWORD': 'proyecto',
+        'PASSWORD': '',
         'HOST': 'localhost',
         'PORT': '3306',
     }
@@ -110,12 +111,12 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/6.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'es'
 
-TIME_ZONE = 'UTC'
+# Ajustamos la zona horaria para que la fecha de los reportes sea exacta
+TIME_ZONE = 'America/La_Paz' 
 
 USE_I18N = True
-
 USE_TZ = True
 
 
@@ -138,4 +139,23 @@ REST_FRAMEWORK = {
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+}
+JAZZMIN_SETTINGS = {
+    # Título de la pestaña del navegador
+    "site_title": "Admin Smart Aulas",
+    
+    # Título en la pantalla de inicio de sesión
+    "site_header": "Smart Aulas",
+    
+    # Nombre en la esquina superior izquierda (Menú lateral)
+    "site_brand": "Smart Aulas",
+    
+    # Mensaje de bienvenida en la pantalla de login
+    "welcome_sign": "Bienvenido al panel de administración",
+    
+    # Texto de derechos de autor en la parte inferior
+    "copyright": "UMSA - Carrera de Informática",
+    
+    # Evita que el menú lateral se colapse por defecto
+    "show_sidebar": True,
 }

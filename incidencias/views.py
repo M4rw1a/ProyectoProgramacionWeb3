@@ -42,106 +42,57 @@ class SeguimientoViewSet(viewsets.ModelViewSet):
 
         incidencia.save()
 
+
 @api_view(['GET'])
 def incidencias_pendientes(request):
-
-    incidencias = Incidencia.objects.filter(
-        estado='PENDIENTE'
-    )
-
-    serializer = IncidenciaSerializer(
-        incidencias,
-        many=True
-    )
-
+    incidencias = Incidencia.objects.filter(estado='PENDIENTE')
+    serializer = IncidenciaSerializer(incidencias, many=True)
     return Response(serializer.data)
 
 @api_view(['GET'])
 def incidencias_resueltas(request):
-
-    incidencias = Incidencia.objects.filter(
-        estado='RESUELTA'
-    )
-
-    serializer = IncidenciaSerializer(
-        incidencias,
-        many=True
-    )
-
+    incidencias = Incidencia.objects.filter(estado='RESUELTA')
+    serializer = IncidenciaSerializer(incidencias, many=True)
     return Response(serializer.data)
 
 @api_view(['GET'])
 def incidencias_tipo(request, tipo):
-
-    incidencias = Incidencia.objects.filter(
-        tipo_problema__nombre__iexact=tipo
-    )
-
-    serializer = IncidenciaSerializer(
-        incidencias,
-        many=True
-    )
-
+    incidencias = Incidencia.objects.filter(tipo_problema__iexact=tipo)
+    serializer = IncidenciaSerializer(incidencias, many=True)
     return Response(serializer.data)
 
 @api_view(['GET'])
 def incidencias_aula(request, id):
-
-    incidencias = Incidencia.objects.filter(
-        aula=id
-    )
-
-    serializer = IncidenciaSerializer(
-        incidencias,
-        many=True
-    )
-
+    incidencias = Incidencia.objects.filter(aula_id=id)
+    serializer = IncidenciaSerializer(incidencias, many=True)
     return Response(serializer.data)
 
 @api_view(['GET'])
 def estadisticas(request):
-
-    pendientes = Incidencia.objects.filter(
-        estado='PENDIENTE'
-    ).count()
-
-    proceso = Incidencia.objects.filter(
-        estado='PROCESO'
-    ).count()
-
-    resueltas = Incidencia.objects.filter(
-        estado='RESUELTA'
-    ).count()
-
+    pendientes = Incidencia.objects.filter(estado='PENDIENTE').count()
+    proceso = Incidencia.objects.filter(estado='EN_PROCESO').count()
+    resueltas = Incidencia.objects.filter(estado='RESUELTA').count()
     total = Incidencia.objects.count()
 
     return Response({
-        
         "pendientes": pendientes,
-        "proceso": proceso,
+        "en_proceso": proceso,
         "resueltas": resueltas,
         "total": total
     })
 
+# Vistas para renderizar tu Frontend en HTML
 def home(request):
     return render(request, 'index.html')
 
 def vista_incidencias(request):
-    return render(
-        request,
-        'incidencias.html'
-    )
+    return render(request, 'incidencias.html')
 
 def vista_registrar(request):
-
-    return render(
-        request,
-        'registrar.html'
-    )
+    return render(request, 'registrar.html')
 
 def vista_seguimientos(request):
+    return render(request, 'seguimientos.html')
 
-    return render(
-        request,
-        'seguimientos.html'
-    )
+def vista_login(request):
+    return render(request, 'login.html')
