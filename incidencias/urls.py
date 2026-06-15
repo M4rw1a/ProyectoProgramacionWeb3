@@ -1,5 +1,6 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
+from . import views
 from .views import (
     IncidenciaViewSet,
     AulaViewSet,
@@ -28,6 +29,14 @@ urlpatterns = [
     # Rutas del CRUD original
     path('api/', include(router.urls)),
     
+    # Consultas Personalizadas
+    path('incidencias/estado/pendiente/',views.incidencias_pendientes),
+    path('incidencias/estado/proceso/',views.incidencias_proceso),
+    path('incidencias/estado/resuelta/',views.incidencias_resueltas),
+    path('incidencias/tipo/<str:tipo>/',views.incidencias_tipo),
+    path('incidencias/aula/<int:id>/',views.incidencias_aula),
+    path('estadisticas/',views.estadisticas),
+
     # TUS RUTAS (Consultas personalizadas Fase 4)
     path('api/consultas/pendientes/', incidencias_pendientes, name='api_pendientes'),
     path('api/consultas/resueltas/', incidencias_resueltas, name='api_resueltas'),

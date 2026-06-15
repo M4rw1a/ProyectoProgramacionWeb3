@@ -53,9 +53,9 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'bd_aulas',
+        'NAME': 'reporte_aulas',
         'USER': 'root',
-        'PASSWORD': '',
+        'PASSWORD': 'proyecto',
         'HOST': '127.0.0.1',
         'PORT': '3306',
     }
