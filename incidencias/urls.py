@@ -10,7 +10,8 @@ from .views import (
     incidencias_tipo,
     incidencias_aula,
     estadisticas,
-    home,
+    home,               # Se queda para la raíz (Landing Page)
+    vista_dashboard,    # <--- 1. AGREGAMOS ESTE IMPORT NUEVO
     vista_incidencias,
     vista_registrar,
     vista_seguimientos,
@@ -35,11 +36,13 @@ urlpatterns = [
     path('api/consultas/estadisticas/', estadisticas, name='api_estadisticas'),
     
     # TUS RUTAS (Vistas Frontend)
-    path('', home, name='home'),
+    path('', home, name='home'), # La raíz (/) ahora cargará tu Landing morada (index.html)
+    
+    path('dashboard/', vista_dashboard, name='vista_dashboard'), # <--- 2. AGREGAMOS LA RUTA PARA EL DASHBOARD
+    
     path('incidencias/', vista_incidencias, name='vista_incidencias'),
     path('registrar/', vista_registrar, name='vista_registrar'),
     path('seguimientos/', vista_seguimientos, name='vista_seguimientos'),
     
     path('login/', vista_login, name='vista_login'),
-    
 ]

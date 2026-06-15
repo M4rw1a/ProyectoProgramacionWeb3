@@ -27,21 +27,15 @@ class IncidenciaViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticatedOrReadOnly]
 
 class SeguimientoViewSet(viewsets.ModelViewSet):
-
     queryset = Seguimiento.objects.all()
     serializer_class = SeguimientoSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
 
     def perform_create(self, serializer):
-
         seguimiento = serializer.save()
-
         incidencia = seguimiento.incidencia
-
         incidencia.estado = seguimiento.estado
-
         incidencia.save()
-
 
 @api_view(['GET'])
 def incidencias_pendientes(request):
@@ -81,9 +75,15 @@ def estadisticas(request):
         "total": total
     })
 
-# Vistas para renderizar tu Frontend en HTML
+# ==========================================
+# Vistas corregidas (Sin prefijo 'incidencias/')
+# ==========================================
+
 def home(request):
     return render(request, 'index.html')
+
+def vista_dashboard(request):
+    return render(request, 'dashboard.html')
 
 def vista_incidencias(request):
     return render(request, 'incidencias.html')

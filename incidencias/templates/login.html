@@ -55,6 +55,20 @@
                     const data = await res.json();
                     // Guardamos el token en el navegador
                     localStorage.setItem('access_token', data.access);
+                    
+                    // --- MAGIA AGREGADA AQUÍ ---
+                    // 1. Guardamos el nombre que escribió el usuario
+                    const usuarioIngresado = document.getElementById('username').value;
+                    localStorage.setItem('username', usuarioIngresado);
+
+                    // 2. Verificamos si es admin (iver o admin) y lo guardamos
+                    if (usuarioIngresado.toLowerCase() === 'iver' || usuarioIngresado.toLowerCase() === 'admin') {
+                        localStorage.setItem('is_admin', 'true');
+                    } else {
+                        localStorage.setItem('is_admin', 'false');
+                    }
+                    // ---------------------------
+
                     window.location.href = '/'; // Redirige al inicio
                 } else {
                     document.getElementById('mensaje-login').innerHTML = '<div class="alert alert-danger">Credenciales incorrectas.</div>';

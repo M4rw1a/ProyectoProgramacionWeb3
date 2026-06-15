@@ -11,16 +11,23 @@
             <a class="navbar-brand" href="/">Smart Aulas</a>
             <div class="collapse navbar-collapse">
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" href="/">Inicio</a></li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="irAInicio()">Inicio</a>
+                    </li>
                     <li class="nav-item"><a class="nav-link" href="/incidencias/">Ver Incidencias</a></li>
                     <li class="nav-item"><a class="nav-link" href="/registrar/">Reportar Incidencia</a></li>
                     <li class="nav-item"><a class="nav-link active" href="/seguimientos/">Seguimientos</a></li>
-                    <li class="nav-item">
-                         <a class="nav-link text-warning fw-bold" href="/admin/" target="_blank">Panel Admin</a>
+                    
+                    <li class="nav-item d-flex align-items-center me-3 ms-3">
+                        <span class="text-white">👤 <strong id="nombre-usuario" class="text-info"></strong></span>
+                    </li>
+
+                    <li class="nav-item" id="btn-admin" style="display: none;">
+                        <a class="nav-link text-warning fw-bold" href="/admin/">Panel Admin</a>
                     </li>
                     <li class="nav-item">
                          <a class="nav-link text-danger fw-bold" href="#" onclick="cerrarSesion()">Cerrar Sesión</a>
-                    </li>
+                    </li>            
                 </ul>
             </div>
         </div>
@@ -49,7 +56,23 @@
     </div>
 
     <script>
+        // 1. VIGILANTE: Seguridad de sesión
         document.addEventListener('DOMContentLoaded', async () => {
+            const token = localStorage.getItem('access_token');
+            if (!token) {
+                window.location.href = '/'; 
+            }
+
+            // Datos de usuario
+            const user = localStorage.getItem('username') || 'Invitado';
+            document.getElementById('nombre-usuario').innerText = user;
+
+            const isAdmin = localStorage.getItem('is_admin');
+            if (isAdmin === 'true') {
+                document.getElementById('btn-admin').style.display = 'block';
+            }
+
+            // Cargar incidencias
             const lista = document.getElementById('lista-incidencias');
             try {
                 const res = await fetch('/api/incidencias/');
@@ -65,6 +88,21 @@
             } catch (e) { console.error(e); }
         });
 
+        // 2. Navegación Inteligente
+        function irAInicio() {
+            const token = localStorage.getItem('access_token');
+            window.location.href = token ? '/dashboard/' : '/';
+        }
+
+        // 3. Cierre de Sesión Unificado
+        function cerrarSesion() {
+            localStorage.removeItem('access_token');
+            localStorage.removeItem('username');
+            localStorage.removeItem('is_admin');
+            window.location.href = '/';
+        }
+
+        // 4. Cargar Historial
         async function verHistorial(id) {
             document.getElementById('titulo-seguimiento').innerText = `Historial de Incidencia #${id}`;
             const cuerpo = document.getElementById('cuerpo-seguimiento');
@@ -76,7 +114,7 @@
                 const filtrados = seguimientos.filter(s => s.incidencia === id);
 
                 if(filtrados.length === 0) {
-                    cuerpo.innerHTML = '<p class="text-muted text-center mt-4">No hay comentarios registrados para esta incidencia.</p>';
+                    cuerpo.innerHTML = '<p class="text-muted text-center mt-4">No hay comentarios registrados.</p>';
                     return;
                 }
 
@@ -91,12 +129,6 @@
                 });
             } catch (e) { console.error(e); }
         }
-    </script>
-    <script>
-    function cerrarSesion() {
-        localStorage.removeItem('access_token');
-        window.location.href = '/login/';
-    }
     </script>
 </body>
 </html>

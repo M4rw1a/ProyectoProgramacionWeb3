@@ -11,15 +11,23 @@
             <a class="navbar-brand" href="/">Smart Aulas</a>
             <div class="collapse navbar-collapse">
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" href="/">Inicio</a></li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="irAInicio()">Inicio</a>
+                    </li>
                     <li class="nav-item"><a class="nav-link active" href="/incidencias/">Ver Incidencias</a></li>
                     <li class="nav-item"><a class="nav-link" href="/registrar/">Reportar Incidencia</a></li>
-                    <li class="nav-item">
-                         <a class="nav-link text-warning fw-bold" href="/admin/" target="_blank">Panel Admin</a>
+                    <li class="nav-item"><a class="nav-link" href="/seguimientos/">Seguimientos</a></li>
+                    
+                    <li class="nav-item d-flex align-items-center me-3 ms-3">
+                        <span class="text-white">👤 <strong id="nombre-usuario" class="text-info"></strong></span>
+                    </li>
+
+                    <li class="nav-item" id="btn-admin" style="display: none;">
+                        <a class="nav-link text-warning fw-bold" href="/admin/">Panel Admin</a>
                     </li>
                     <li class="nav-item">
                          <a class="nav-link text-danger fw-bold" href="#" onclick="cerrarSesion()">Cerrar Sesión</a>
-                    </li>
+                    </li>            
                 </ul>
             </div>
         </div>
@@ -66,12 +74,44 @@
     </div>
 
     <script>
-        // Escuchar el selector de tipo
+        // 1. VIGILANTE: Si no hay token, fuera
+        document.addEventListener('DOMContentLoaded', () => {
+            const token = localStorage.getItem('access_token');
+            if (!token) {
+                window.location.href = '/'; 
+            }
+
+            // Cargar datos de usuario
+            const user = localStorage.getItem('username') || 'Invitado';
+            document.getElementById('nombre-usuario').innerText = user;
+
+            const isAdmin = localStorage.getItem('is_admin');
+            if (isAdmin === 'true') {
+                document.getElementById('btn-admin').style.display = 'block';
+            }
+
+            cargarRuta('/api/incidencias/');
+        });
+
+        // 2. Navegación Inteligente
+        function irAInicio() {
+            const token = localStorage.getItem('access_token');
+            window.location.href = token ? '/dashboard/' : '/';
+        }
+
+        // 3. Cierre de Sesión Unificado
+        function cerrarSesion() {
+            localStorage.removeItem('access_token');
+            localStorage.removeItem('username');
+            localStorage.removeItem('is_admin');
+            window.location.href = '/';
+        }
+
+        // 4. Lógica de tabla
         document.getElementById('filtro-tipo').addEventListener('change', (e) => {
             if(e.target.value) cargarRuta(`/api/consultas/tipo/${e.target.value}/`);
         });
 
-        // Función para cargar datos desde la API
         async function cargarRuta(url) {
             try {
                 const res = await fetch(url);
@@ -98,15 +138,6 @@
                 });
             } catch (err) { console.error(err); }
         }
-
-        // Cargar todo al inicio
-        document.addEventListener('DOMContentLoaded', () => cargarRuta('/api/incidencias/'));
     </script>
-    <script>
-    function cerrarSesion() {
-        localStorage.removeItem('access_token');
-        window.location.href = '/login/';
-    }
-</script>
 </body>
 </html>
