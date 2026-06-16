@@ -44,12 +44,6 @@ def incidencias_pendientes(request):
     return Response(serializer.data)
 
 @api_view(['GET'])
-def incidencias_proceso(request):
-    incidencias = Incidencia.objects.filter(estado='EN_PROCESO')
-    serializer = IncidenciaSerializer(incidencias,many=True)
-    return Response(serializer.data)
-
-@api_view(['GET'])
 def incidencias_resueltas(request):
     incidencias = Incidencia.objects.filter(estado='RESUELTA')
     serializer = IncidenciaSerializer(incidencias, many=True)

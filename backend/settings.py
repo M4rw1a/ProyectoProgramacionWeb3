@@ -53,9 +53,9 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'reporte_aulas',
+        'NAME': 'bd_aulas',
         'USER': 'root',
-        'PASSWORD': 'proyecto',
+        'PASSWORD': '',
         'HOST': '127.0.0.1',
         'PORT': '3306',
     }
@@ -89,20 +89,57 @@ SIMPLE_JWT = {
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
 }
 
+# --- CONFIGURACIÓN VISUAL DEL PANEL ADMIN (JAZZMIN) ---
+
 JAZZMIN_SETTINGS = {
-    "site_title": "Admin Smart Aulas",
+    # Textos principales
+    "site_title": "Smart Aulas Admin",
     "site_header": "Smart Aulas",
-    "site_brand": "Smart Aulas",    
-    "welcome_sign": "Bienvenido al panel de administración",
-    "copyright": "UMSA - Carrera de Informática",
-    "show_sidebar": True,
-    "show_ui_builder": False,  # Panel de personalización desactivado
-    "changeform_format": "single", # Mejora la organización visual
-    "custom_links": {
-        "incidencias": [{
-            "name": "Volver al Dashboard",
-            "url": "/dashboard/",
-            "icon": "fas fa-tachometer-alt",
-        }]
+    "site_brand": "Smart Aulas",
+    "welcome_sign": "Bienvenido al Centro de Control",
+    "copyright": "Smart Aulas",
+    
+    # Menú superior (Reemplaza ese modelo falso de "Volver al Dashboard")
+    "topmenu_links": [
+        {"name": "Inicio",  "url": "admin:index", "permissions": ["auth.view_user"]},
+        {"name": "Ver Frontend (Dashboard)", "url": "/dashboard/", "new_window": True},
+    ],
+
+    # Iconos para el menú lateral (Usa FontAwesome)
+    "icons": {
+        "auth": "fas fa-users-cog",
+        "auth.user": "fas fa-user",
+        "auth.Group": "fas fa-users",
+        "incidencias.Aula": "fas fa-door-open",
+        "incidencias.Incidencia": "fas fa-exclamation-triangle",
+        "incidencias.Perfil": "fas fa-id-card",
+        "incidencias.Seguimiento": "fas fa-history",
     },
+    "default_icon_parents": "fas fa-chevron-circle-right",
+    "default_icon_children": "fas fa-circle",
+    
+    # Comportamiento
+    "show_sidebar": True,
+    "navigation_expanded": True,
+    "search_model": ["auth.User", "incidencias.Incidencia"],
+}
+
+JAZZMIN_UI_TWEAKS = {
+    # Tema limpio y moderno (elimina el aspecto genérico)
+    "theme": "lumen", 
+    
+    # Colores de la barra superior y lateral
+    "navbar": "navbar-white navbar-light",
+    "sidebar": "sidebar-dark-primary",
+    
+    # Mejora en los colores de los botones (adiós botones turquesa)
+    "button_classes": {
+        "primary": "btn-primary",
+        "secondary": "btn-secondary",
+        "info": "btn-info",
+        "warning": "btn-warning",
+        "danger": "btn-danger",
+        "success": "btn-success"
+    },
+    "actions_sticky_top": False
 }

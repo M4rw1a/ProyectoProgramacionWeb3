@@ -5,118 +5,151 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Smart Aulas - Bienvenidos</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    
     <style>
-        .bg-dots {
-            background-color: #6366f1;
-            background-image: radial-gradient(#ffffff25 2px, transparent 2px);
-            background-size: 30px 30px;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
+        /* Estilos personalizados mínimos para el fondo de la izquierda */
+        .bg-hero {
+            background-color: #0d6efd;
+            background-image: radial-gradient(circle at center, #3b82f6 0%, #0645ad 100%);
+            position: relative;
+            overflow: hidden;
         }
-        .text-yellow { color: #fbbf24; }
-        .btn-pill { border-radius: 50px; padding: 12px 35px; font-weight: bold; }
+        /* Decoración de círculos sutiles en el fondo */
+        .bg-hero::before {
+            content: '';
+            position: absolute;
+            top: -10%; left: -10%;
+            width: 400px; height: 400px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 50%;
+        }
+        .bg-hero::after {
+            content: '';
+            position: absolute;
+            bottom: -5%; right: -5%;
+            width: 300px; height: 300px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 50%;
+        }
+        /* Ajuste de inputs */
+        .form-control { padding: 0.75rem 1rem; }
+        .form-control:focus {
+            border-color: #0d6efd;
+            box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.15);
+        }
     </style>
 </head>
 <body>
-    <div class="bg-dots">
-        <div class="container text-center">
-            <h1 class="display-4 fw-bold text-white">SMART <span class="text-yellow">AULAS</span></h1>
-            <p class="lead text-white mt-4 mb-5">Sistema integral para tu institución educativa.</p>
+    <div class="container-fluid p-0 overflow-hidden">
+        <div class="row g-0 min-vh-100">
             
-            <button type="button" class="btn btn-light btn-pill btn-lg shadow" data-bs-toggle="modal" data-bs-target="#loginModal">
-                Iniciar Sesión
-            </button>
-        </div>
-    </div>
+            <div class="col-lg-6 d-none d-lg-flex flex-column justify-content-center align-items-center bg-hero text-white p-5 position-relative">
+                <div class="text-center z-1">
+                    <i class="bi bi-building fs-1 mb-3 d-block text-warning"></i>
+                    <h1 class="display-3 fw-bolder mb-3">SMART <span class="text-warning">AULAS</span></h1>
+                    <p class="lead fw-light mb-5 fs-4" style="max-width: 80%;">Gestión inteligente, reportes en tiempo real y seguimiento técnico para tu institución educativa.</p>
+                </div>
+            </div>
 
-    <div class="modal fade" id="loginModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header bg-primary text-white">
-                    <h5 class="modal-title">Iniciar Sesión</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            <div class="col-lg-6 d-flex flex-column justify-content-center align-items-center bg-light p-4 p-sm-5">
+                
+                <div class="text-center d-lg-none mb-4">
+                    <i class="bi bi-building fs-1 text-primary mb-2"></i>
+                    <h2 class="fw-bolder">SMART <span class="text-primary">AULAS</span></h2>
                 </div>
-                <div class="modal-body">
-                    <div id="mensaje-login"></div>
-                    <form id="form-login">
-                        <div class="mb-3">
-                            <label class="form-label">Usuario</label>
-                            <input type="text" class="form-control" id="username" required>
+
+                <div class="card shadow-lg border-0 rounded-4 w-100" style="max-width: 450px;">
+                    <div class="card-body p-5">
+                        <div class="text-center mb-4">
+                            <h4 class="fw-bold text-dark">Bienvenido de nuevo</h4>
+                            <p class="text-muted">Ingresa tus credenciales para continuar</p>
                         </div>
-                        <div class="mb-3">
-                            <label class="form-label">Contraseña</label>
-                            <input type="password" class="form-control" id="password" required>
-                        </div>
-                        <button type="submit" class="btn btn-primary w-100">Ingresar</button>
-                    </form>
+
+                        <div id="mensaje-login"></div>
+                        
+                        <form id="form-login">
+                            <div class="mb-4">
+                                <label class="form-label fw-bold text-secondary small text-uppercase">Usuario</label>
+                                <div class="input-group flex-nowrap shadow-sm">
+                                    <span class="input-group-text bg-white border-end-0 text-muted"><i class="bi bi-person-fill"></i></span>
+                                    <input type="text" class="form-control border-start-0 ps-0" id="username" placeholder="Ej: iver" required>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-5">
+                                <label class="form-label fw-bold text-secondary small text-uppercase">Contraseña</label>
+                                <div class="input-group flex-nowrap shadow-sm">
+                                    <span class="input-group-text bg-white border-end-0 text-muted"><i class="bi bi-lock-fill"></i></span>
+                                    <input type="password" class="form-control border-start-0 ps-0" id="password" placeholder="••••••••" required>
+                                </div>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary w-100 py-3 fw-bold shadow btn-lg rounded-3" id="btn-login">
+                                Iniciar Sesión <i class="bi bi-arrow-right-circle ms-2"></i>
+                            </button>
+                        </form>
+                    </div>
                 </div>
+                
+                <p class="text-muted mt-5 small">&copy; 2026 Smart Aulas. Todos los derechos reservados.</p>
             </div>
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         document.getElementById('form-login').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const userVal = document.getElementById('username').value;
-            
-            const res = await fetch('/api/token/', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    username: userVal,
-                    password: document.getElementById('password').value
-                })
-            });
+            console.log("Iniciando autenticación...");
 
-            if(res.ok) {
-                const data = await res.json();
-                localStorage.setItem('access_token', data.access);
-                localStorage.setItem('username', userVal);
-                
-                if (userVal.toLowerCase() === 'iver' || userVal.toLowerCase() === 'admin') {
-                    localStorage.setItem('is_admin', 'true');
+            const userVal = document.getElementById('username').value.trim();
+            const passVal = document.getElementById('password').value;
+            const btnSubmit = document.getElementById('btn-login');
+            
+            // UX: Estado de carga en el botón
+            const btnOriginalText = btnSubmit.innerHTML;
+            btnSubmit.disabled = true;
+            btnSubmit.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status"></span> Autenticando...';
+
+            try {
+                const res = await fetch('/api/token/', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username: userVal, password: passVal })
+                });
+
+                if(res.ok) {
+                    const data = await res.json();
+                    
+                    // Guardar datos en el navegador
+                    localStorage.setItem('access_token', data.access);
+                    localStorage.setItem('username', userVal);
+                    
+                    // Lógica de administrador (manteniendo tu condición)
+                    if (userVal.toLowerCase() === 'iver' || userVal.toLowerCase() === 'admin') {
+                        localStorage.setItem('is_admin', 'true');
+                    } else {
+                        localStorage.setItem('is_admin', 'false');
+                    }
+                    
+                    // Éxito: Redirigir al dashboard
+                    document.getElementById('mensaje-login').innerHTML = '<div class="alert alert-success"><i class="bi bi-check-circle-fill me-2"></i>Ingreso exitoso. Redirigiendo...</div>';
+                    setTimeout(() => { window.location.href = '/dashboard/'; }, 500);
+
                 } else {
-                    localStorage.setItem('is_admin', 'false');
+                    // Error de credenciales
+                    document.getElementById('mensaje-login').innerHTML = '<div class="alert alert-danger d-flex align-items-center"><i class="bi bi-x-octagon-fill me-2 fs-5"></i><div>Usuario o contraseña incorrectos.</div></div>';
+                    btnSubmit.disabled = false;
+                    btnSubmit.innerHTML = btnOriginalText;
                 }
-                
-                window.location.href = '/dashboard/';
-            } else {
-                document.getElementById('mensaje-login').innerHTML = '<div class="alert alert-danger">Error de credenciales</div>';
+            } catch (error) {
+                // Error de servidor/red
+                console.error("Error de conexión:", error);
+                document.getElementById('mensaje-login').innerHTML = '<div class="alert alert-warning d-flex align-items-center"><i class="bi bi-exclamation-triangle-fill me-2 fs-5"></i><div>No se pudo conectar con el servidor. Verifica que el backend esté corriendo.</div></div>';
+                btnSubmit.disabled = false;
+                btnSubmit.innerHTML = btnOriginalText;
             }
         });
     </script>
-    <script>
-    document.getElementById('form-login').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        console.log("¡Botón presionado!"); // Si esto no sale en F12 -> Console, el ID del form está mal.
-
-        const userVal = document.getElementById('username').value;
-        const passVal = document.getElementById('password').value;
-
-        try {
-            const res = await fetch('/api/token/', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username: userVal, password: passVal })
-            });
-
-            if(res.ok) {
-                const data = await res.json();
-                localStorage.setItem('access_token', data.access);
-                localStorage.setItem('username', userVal);
-                window.location.href = '/dashboard/';
-            } else {
-                document.getElementById('mensaje-login').innerHTML = 
-                    '<div class="alert alert-danger">Usuario o contraseña incorrectos</div>';
-            }
-        } catch (error) {
-            console.error("Error de conexión:", error);
-            document.getElementById('mensaje-login').innerHTML = 
-                '<div class="alert alert-warning">No se pudo conectar con el servidor</div>';
-        }
-    });
-</script>
 </body>
 </html>

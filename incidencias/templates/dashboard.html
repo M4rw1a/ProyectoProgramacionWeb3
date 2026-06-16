@@ -4,29 +4,54 @@
     <meta charset="UTF-8">
     <title>Smart Aulas - Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    
+    <style>
+        .card-hover {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+        }
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 .5rem 1rem rgba(0,0,0,.15)!important;
+        }
+        body { background-color: #f4f6f9; }
+    </style>
 </head>
-<body class="bg-light">
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
         <div class="container">
-            <a class="navbar-brand" href="/">Smart Aulas</a>
+            <a class="navbar-brand fw-bold text-primary" href="/">
+                <i class="bi bi-building me-1"></i> Smart Aulas
+            </a>
             <div class="collapse navbar-collapse">
-                <ul class="navbar-nav ms-auto">
+                <ul class="navbar-nav ms-auto align-items-center">
                     <li class="nav-item">
-    <a class="nav-link active" href="#" onclick="irAInicio()">Inicio</a>
-</li>
-                    <li class="nav-item"><a class="nav-link" href="/incidencias/">Ver Incidencias</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/registrar/">Reportar Incidencia</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/seguimientos/">Seguimientos</a></li>
+                        <a class="nav-link active fw-semibold" href="#" onclick="irAInicio()">Inicio</a>
+                    </li>
+                    <li class="nav-item" id="nav-ver-incidencias" style="display: none;">
+                        <a class="nav-link" href="/incidencias/">Ver Incidencias</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/registrar/">Reportar Incidencia</a>
+                    </li>
+                    <li class="nav-item" id="nav-seguimientos" style="display: none;">
+                        <a class="nav-link" href="/seguimientos/">Seguimientos</a>
+                    </li>
                     
-                    <li class="nav-item d-flex align-items-center me-3 ms-3">
-                        <span class="text-white">👤 <strong id="nombre-usuario" class="text-info"></strong></span>
+                    <li class="nav-item d-flex align-items-center me-3 ms-4 border-start ps-3">
+                        <span class="text-secondary"><i class="bi bi-person-circle me-1"></i> <strong id="nombre-usuario" class="text-dark"></strong></span>
                     </li>
 
-                    <li class="nav-item" id="btn-admin" style="display: none;">
-                        <a class="nav-link text-warning fw-bold" href="/admin/">Panel Admin</a>
+                    <li class="nav-item me-2" id="btn-admin" style="display: none;">
+                        <a class="btn btn-dark btn-sm fw-bold" href="/admin/">
+                            <i class="bi bi-gear-fill me-1"></i> Panel Admin
+                        </a>
                     </li>
                     <li class="nav-item">
-                         <a class="nav-link text-danger fw-bold" href="#" onclick="cerrarSesion()">Cerrar Sesión</a>
+                         <button class="btn btn-outline-danger btn-sm fw-bold" onclick="cerrarSesion()">
+                            <i class="bi bi-box-arrow-right me-1"></i> Salir
+                         </button>
                     </li>            
                 </ul>
             </div>
@@ -34,37 +59,99 @@
     </nav>
 
     <div class="container mt-5">
-        <h2 class="mb-4 fw-bold text-center">Resumen Operativo de Aulas</h2>
-        <div class="row text-center mt-4">
-            <div class="col-md-3">
-                <div class="card border-0 shadow-sm bg-primary text-white h-100">
-                    <div class="card-body py-5">
-                        <h5>Total Reportes</h5>
-                        <h1 class="display-3 fw-bold" id="stat-total">-</h1>
+        
+        <div id="vista-usuario" style="display: none;">
+            <div class="row justify-content-center mt-4">
+                <div class="col-md-8">
+                    <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+                        <div class="card-body p-5 text-center">
+                            <div class="bg-primary bg-opacity-10 rounded-circle d-inline-flex justify-content-center align-items-center mb-4" style="width: 80px; height: 80px;">
+                                <i class="bi bi-emoji-smile fs-1 text-primary"></i>
+                            </div>
+                            <h2 class="fw-bold text-dark">¡Hola, <span id="user-display-name" class="text-primary"></span>!</h2>
+                            <p class="text-muted fs-5 mb-5 px-md-4">Bienvenido a Smart Aulas. Ayúdanos a mantener nuestras instalaciones en perfecto estado. Si notas que algo no funciona en tu aula, repórtalo aquí para solucionarlo rápido.</p>
+                            <a href="/registrar/" class="btn btn-primary btn-lg px-5 py-3 shadow-sm rounded-pill fw-bold">
+                                <i class="bi bi-megaphone-fill me-2"></i> Registrar una Incidencia
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="col-md-3">
-                <div class="card border-0 shadow-sm bg-danger text-white h-100">
-                    <div class="card-body py-5">
-                        <h5>Pendientes</h5>
-                        <h1 class="display-3 fw-bold" id="stat-pendientes">-</h1>
+        </div>
+
+        <div id="vista-admin" style="display: none;">
+            <div class="d-flex justify-content-between align-items-end mb-4">
+                <div>
+                    <h2 class="fw-bold mb-0 text-dark">Resumen Operativo</h2>
+                    <p class="text-muted mb-0">Monitoreo en tiempo real del estado de las aulas.</p>
+                </div>
+                <a href="/registrar/" class="btn btn-primary shadow-sm">
+                    <i class="bi bi-plus-lg me-1"></i> Nueva Incidencia
+                </a>
+            </div>
+
+            <div class="row mt-4">
+                <div class="col-md-3 mb-4">
+                    <div class="card border-0 shadow-sm h-100 card-hover border-start border-primary border-4" onclick="window.location.href='/incidencias/'">
+                        <div class="card-body p-4 d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="text-muted fw-bold text-uppercase mb-1" style="font-size: 0.8rem;">Total Reportes</h6>
+                                <h2 class="fw-bold mb-0 text-primary" id="stat-total">-</h2>
+                            </div>
+                            <div class="bg-primary bg-opacity-10 p-3 rounded text-primary">
+                                <i class="bi bi-file-earmark-text fs-3"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <div class="card border-0 shadow-sm h-100 card-hover border-start border-danger border-4" onclick="window.location.href='/incidencias/'">
+                        <div class="card-body p-4 d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="text-muted fw-bold text-uppercase mb-1" style="font-size: 0.8rem;">Pendientes</h6>
+                                <h2 class="fw-bold mb-0 text-danger" id="stat-pendientes">-</h2>
+                            </div>
+                            <div class="bg-danger bg-opacity-10 p-3 rounded text-danger">
+                                <i class="bi bi-exclamation-octagon fs-3"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <div class="card border-0 shadow-sm h-100 card-hover border-start border-warning border-4" onclick="window.location.href='/incidencias/'">
+                        <div class="card-body p-4 d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="text-muted fw-bold text-uppercase mb-1" style="font-size: 0.8rem;">En Proceso</h6>
+                                <h2 class="fw-bold mb-0 text-warning" id="stat-proceso">-</h2>
+                            </div>
+                            <div class="bg-warning bg-opacity-10 p-3 rounded text-warning">
+                                <i class="bi bi-tools fs-3"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <div class="card border-0 shadow-sm h-100 card-hover border-start border-success border-4" onclick="window.location.href='/incidencias/'">
+                        <div class="card-body p-4 d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="text-muted fw-bold text-uppercase mb-1" style="font-size: 0.8rem;">Resueltas</h6>
+                                <h2 class="fw-bold mb-0 text-success" id="stat-resueltas">-</h2>
+                            </div>
+                            <div class="bg-success bg-opacity-10 p-3 rounded text-success">
+                                <i class="bi bi-check-circle fs-3"></i>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="col-md-3">
-                <div class="card border-0 shadow-sm bg-warning text-dark h-100">
-                    <div class="card-body py-5">
-                        <h5>En Proceso</h5>
-                        <h1 class="display-3 fw-bold" id="stat-proceso">-</h1>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="card border-0 shadow-sm bg-success text-white h-100">
-                    <div class="card-body py-5">
-                        <h5>Resueltas</h5>
-                        <h1 class="display-3 fw-bold" id="stat-resueltas">-</h1>
+
+            <div class="row mt-2">
+                <div class="col-12">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body p-4 text-center text-muted">
+                            <i class="bi bi-inbox fs-1 text-light mb-2"></i>
+                            <p class="mb-0">Usa el menú superior para ver el detalle de las incidencias o registrar una nueva.</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -73,53 +160,49 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', async () => {
-            // --- MAGIA VISUAL: Cargar nombre de usuario y verificar Admin ---
             const user = localStorage.getItem('username') || 'Invitado';
             document.getElementById('nombre-usuario').innerText = user;
+            document.getElementById('user-display-name').innerText = user; // Para el banner de bienvenida
 
             const isAdmin = localStorage.getItem('is_admin');
+            
+            // --- LÓGICA DE ROLES (RBAC) ---
             if (isAdmin === 'true') {
+                // Modo Admin: Mostramos menú completo y las estadísticas
                 document.getElementById('btn-admin').style.display = 'block';
-            }
-            // --------------------------------------------------------------
+                document.getElementById('nav-ver-incidencias').style.display = 'block';
+                document.getElementById('nav-seguimientos').style.display = 'block';
+                document.getElementById('vista-admin').style.display = 'block';
 
-            // Cargar estadísticas
-            try {
-                // Como las rutas de la API de Django suelen requerir la barra final
-                const res = await fetch('/api/consultas/estadisticas/');
-                if(res.ok){
-                    const data = await res.json();
-                    document.getElementById('stat-total').innerText = data.total;
-                    document.getElementById('stat-pendientes').innerText = data.pendientes;
-                    document.getElementById('stat-proceso').innerText = data.en_proceso;
-                    document.getElementById('stat-resueltas').innerText = data.resueltas;
-                }
-            } catch (error) { console.error("Error al cargar stats:", error); }
+                // Cargar estadísticas solo si es admin
+                try {
+                    const res = await fetch('/api/consultas/estadisticas/');
+                    if(res.ok){
+                        const data = await res.json();
+                        document.getElementById('stat-total').innerText = data.total;
+                        document.getElementById('stat-pendientes').innerText = data.pendientes;
+                        document.getElementById('stat-proceso').innerText = data.en_proceso;
+                        document.getElementById('stat-resueltas').innerText = data.resueltas;
+                    }
+                } catch (error) { console.error("Error al cargar stats:", error); }
+
+            } else {
+                // Modo Usuario Normal: Ocultamos stats y mostramos bienvenida
+                document.getElementById('vista-usuario').style.display = 'block';
+            }
         });
-    </script>
-    <script>
-    function cerrarSesion() {
-        // Limpiamos absolutamente todo al salir
-        localStorage.removeItem('access_token');
-        localStorage.removeItem('username');
-        localStorage.removeItem('is_admin');
-        
-        // CORRECCIÓN: Redirigir a la raíz '/' donde está tu Landing/Login
-        window.location.href = '/'; 
-    }
-</script>
-<script>
-    function irAInicio() {
-        const token = localStorage.getItem('access_token');
-        
-        // Si hay token, estamos logueados -> Vamos al Dashboard
-        if (token) {
-            window.location.href = '/dashboard/'; // Asegúrate de que esta sea la ruta de tu dashboard
-        } else {
-            // Si no hay token -> Vamos a la Landing Page (Login)
-            window.location.href = '/';
+
+        function cerrarSesion() {
+            localStorage.removeItem('access_token');
+            localStorage.removeItem('username');
+            localStorage.removeItem('is_admin');
+            window.location.href = '/'; 
         }
-    }
-</script>
+
+        function irAInicio() {
+            const token = localStorage.getItem('access_token');
+            window.location.href = token ? '/dashboard/' : '/';
+        }
+    </script>
 </body>
 </html>
